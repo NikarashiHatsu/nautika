@@ -6,6 +6,11 @@ declare module '@inertiajs/core' {
             name: string;
             auth: Auth;
             sidebarOpen: boolean;
+            createdWorkspaces: {
+                id: string;
+                name: string;
+                slug: string
+            }[];
             [key: string]: unknown;
         };
     }

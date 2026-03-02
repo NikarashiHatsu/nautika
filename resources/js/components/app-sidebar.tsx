@@ -1,5 +1,5 @@
-import { Link } from '@inertiajs/react';
-import { BookOpen, FolderGit2, LayoutGrid } from 'lucide-react';
+import { Link, usePage } from '@inertiajs/react';
+import { BriefcaseBusiness, Folder, LayoutGrid } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
+import WorkspaceController from '@/actions/App/Http/Controllers/Dashboard/WorkspaceController';
 
 const mainNavItems: NavItem[] = [
     {
@@ -22,22 +23,25 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
     },
+    {
+        title: 'Workspace',
+        href: WorkspaceController.index(),
+        icon: BriefcaseBusiness,
+    },
 ];
 
-const footerNavItems: NavItem[] = [
-    {
-        title: 'Repository',
-        href: 'https://github.com/laravel/react-starter-kit',
-        icon: FolderGit2,
-    },
-    {
-        title: 'Documentation',
-        href: 'https://laravel.com/docs/starter-kits#react',
-        icon: BookOpen,
-    },
-];
+const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
+    const { createdWorkspaces = [] } = usePage().props;
+
+    const quickAccessItems: NavItem[] = createdWorkspaces.map((workspace) => ({
+        id: workspace.id,
+        title: workspace.name,
+        href: WorkspaceController.show(workspace),
+        icon: Folder,
+    }));
+
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -53,7 +57,17 @@ export function AppSidebar() {
             </SidebarHeader>
 
             <SidebarContent>
-                <NavMain items={mainNavItems} />
+                <NavMain
+                    title={'Aplikasi'}
+                    items={mainNavItems}
+                />
+
+                {quickAccessItems.length > 0 && (
+                    <NavMain
+                        title={'Akses Cepat'}
+                        items={quickAccessItems}
+                    />
+                )}
             </SidebarContent>
 
             <SidebarFooter>
