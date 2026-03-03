@@ -14,8 +14,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('/workspace', \App\Http\Controllers\Dashboard\WorkspaceController::class)->except(['create', 'edit']);
 
         Route::group(['prefix' => '/workspace/{workspace}', 'as' => 'workspace.'], function () {
+            Route::get('/kanban', [\App\Http\Controllers\Dashboard\Workspace\Project\KanbanController::class, 'index'])->name('kanban.index');
+
             Route::resource('/project', \App\Http\Controllers\Dashboard\Workspace\ProjectController::class)->except('create', 'edit');
-            Route::patch('/project/{project}/archive', [\App\Http\Controllers\Dashboard\Workspace\ProjectController::class, 'archive'])->name('project.archive');
+            Route::group(['prefix' => 'project', 'as' => 'project.'], function () {
+                Route::patch('/{project}/archive', [\App\Http\Controllers\Dashboard\Workspace\ProjectController::class, 'archive'])->name('archive');
+
+                Route::post('/{project}/workflow', [\App\Http\Controllers\Dashboard\Workspace\Project\WorkflowController::class, 'store'])->name('workflow.store');
+                Route::patch('/{project}/workflow/{workflow}', [\App\Http\Controllers\Dashboard\Workspace\Project\WorkflowController::class, 'update'])->name('workflow.update');
+                Route::patch('/{project}/workflow/{workflow}/reorder', [\App\Http\Controllers\Dashboard\Workspace\Project\WorkflowController::class, 'reorder'])->name('workflow.reorder');
+                Route::delete('/{project}/workflow/{workflow}', [\App\Http\Controllers\Dashboard\Workspace\Project\WorkflowController::class, 'destroy'])->name('workflow.destroy');
+            });
         });
     });
 });

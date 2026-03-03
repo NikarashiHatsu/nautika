@@ -1,12 +1,12 @@
 import WorkspaceController from "@/actions/App/Http/Controllers/Dashboard/WorkspaceController";
 import { NavItem } from "@/types";
 import { Link, usePage } from "@inertiajs/react";
-import { CalendarDays, ChevronRightIcon, Cog, FileCheck, Folder, FolderGit, FolderKanban, LayoutList, Paperclip, ScrollText, SquareKanban, Users } from "lucide-react";
-import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from "../ui/sidebar";
+import { CalendarDays, ChevronRightIcon, Cog, FileCheck, Folder, FolderKanban, LayoutList, Paperclip, ScrollText, SquareKanban, Users } from "lucide-react";
+import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from "../ui/sidebar";
 import { useCurrentUrl } from "@/hooks/use-current-url";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
 import ProjectController from "@/actions/App/Http/Controllers/Dashboard/Workspace/ProjectController";
-import { Button } from "../ui/button";
+import KanbanController from "@/actions/App/Http/Controllers/Dashboard/Workspace/Project/KanbanController";
 
 export default function WorkspaceSidebar() {
     const { createdWorkspaces = [] } = usePage().props;
@@ -25,24 +25,20 @@ export default function WorkspaceSidebar() {
 
             <SidebarMenu>
                 {quickAccessItems.map((item) => {
-                    const isActive = useCurrentUrl().isCurrentOrParentUrl(item.href);
+                    const isParentActive = useCurrentUrl().isCurrentOrParentUrl(item.href);
+
+                    const isMenuActive = (currentUrl: string) => useCurrentUrl().isCurrentUrl(currentUrl);
 
                     return (
-                        <SidebarMenuItem key={item.id ?? item.title}>
-                            <Collapsible defaultOpen={isActive}>
+                        <Collapsible defaultOpen={isParentActive} key={item.id ?? item.title}>
+                            <SidebarMenuItem>
                                 <CollapsibleTrigger asChild>
-                                    <Button
-                                        variant="ghost"
-                                        size="sm"
-                                        className="group w-full justify-between transition-none hover:bg-accent hover:text-accent-foreground cursor-pointer"
-                                    >
-                                        <div className="flex items-center gap-2">
-                                            <Folder strokeWidth={1.5} />
-                                            <span>{item.title}</span>
-                                        </div>
+                                    <SidebarMenuButton tooltip={item.title}>
+                                        <Folder strokeWidth={1.5} />
+                                        <span>{item.title}</span>
 
-                                        <ChevronRightIcon className="transition-transform group-data-[state=open]:rotate-90" />
-                                    </Button>
+                                        <ChevronRightIcon className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
+                                    </SidebarMenuButton>
                                 </CollapsibleTrigger>
 
                                 <CollapsibleContent>
@@ -52,11 +48,16 @@ export default function WorkspaceSidebar() {
                                                 Navigasi
                                             </SidebarGroupLabel>
 
-                                            <SidebarMenuSubButton>
-                                                <SquareKanban strokeWidth={1.5} />
-                                                <span>
-                                                    Kanban
-                                                </span>
+                                            <SidebarMenuSubButton
+                                                asChild
+                                                isActive={isMenuActive(KanbanController.index({ workspace: item.id! }).url)}
+                                            >
+                                                <Link href={KanbanController.index({ workspace: item.id! })}>
+                                                    <SquareKanban strokeWidth={1.5} />
+                                                    <span>
+                                                        Kanban
+                                                    </span>
+                                                </Link>
                                             </SidebarMenuSubButton>
 
                                             <SidebarMenuSubButton>
@@ -79,7 +80,7 @@ export default function WorkspaceSidebar() {
 
                                             <SidebarMenuSubButton
                                                 asChild
-                                                isActive={isActive}
+                                                isActive={isMenuActive(ProjectController.index({ workspace: item.id! }).url)}
                                             >
                                                 <Link href={ProjectController.index({ workspace: item.id! })}>
                                                     <FolderKanban strokeWidth={1.5} />
@@ -130,8 +131,8 @@ export default function WorkspaceSidebar() {
                                         </SidebarMenuSubItem>
                                     </SidebarMenuSub>
                                 </CollapsibleContent>
-                            </Collapsible>
-                        </SidebarMenuItem>
+                            </SidebarMenuItem>
+                        </Collapsible>
                     )
                 })}
             </SidebarMenu>

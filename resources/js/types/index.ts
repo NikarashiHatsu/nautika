@@ -4,3 +4,4 @@ export type * from './pagination';
 export type * from './ui';
 export type * from './workspace';
 export type * from './project';
+export type * from './workflow';

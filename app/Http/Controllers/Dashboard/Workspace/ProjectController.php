@@ -7,6 +7,7 @@ use App\Http\Requests\Project\StoreProjectRequest;
 use App\Http\Requests\Project\UpdateProjectRequest;
 use App\Models\Project;
 use App\Models\Workspace;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class ProjectController extends Controller
@@ -29,14 +30,50 @@ class ProjectController extends Controller
         ]);
     }
 
-    public function store(Workspace $workspace, StoreProjectRequest $request)
+    public function store(StoreProjectRequest $request, Workspace $workspace)
     {
-        $workspace->projects()->create($request->validated());
+        DB::transaction(
+            function () use ($workspace, $request) {
+                $project = $workspace->projects()->create($request->validated());
+
+                $project->workflows()->create([
+                    'position' => 1,
+                    'name' => 'Backlog',
+                    'slug' => 'backlog',
+                    'is_backlog' => true,
+                    'is_done' => false,
+                ]);
+
+                $project->workflows()->create([
+                    'position' => 2,
+                    'name' => 'To-do',
+                    'slug' => 'to-do',
+                    'is_backlog' => false,
+                    'is_done' => false,
+                ]);
+
+                $project->workflows()->create([
+                    'position' => 3,
+                    'name' => 'In Progress',
+                    'slug' => 'in-progress',
+                    'is_backlog' => false,
+                    'is_done' => false,
+                ]);
+
+                $project->workflows()->create([
+                    'position' => 4,
+                    'name' => 'Completed',
+                    'slug' => 'completed',
+                    'is_backlog' => false,
+                    'is_done' => true,
+                ]);
+            }
+        );
 
         return back();
     }
 
-    public function show(Project $project)
+    public function show(Workspace $workspace, Project $project)
     {
         //
     }
