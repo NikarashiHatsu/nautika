@@ -1,5 +1,5 @@
-import { Link, usePage } from '@inertiajs/react';
-import { BriefcaseBusiness, Folder, LayoutGrid } from 'lucide-react';
+import { Link } from '@inertiajs/react';
+import { BriefcaseBusiness, LayoutGrid } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavFooter } from '@/components/nav-footer';
 import { NavMain } from '@/components/nav-main';
@@ -16,6 +16,7 @@ import {
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types';
 import WorkspaceController from '@/actions/App/Http/Controllers/Dashboard/WorkspaceController';
+import WorkspaceSidebar from './workspace/workspace-sidebar';
 
 const mainNavItems: NavItem[] = [
     {
@@ -33,15 +34,6 @@ const mainNavItems: NavItem[] = [
 const footerNavItems: NavItem[] = [];
 
 export function AppSidebar() {
-    const { createdWorkspaces = [] } = usePage().props;
-
-    const quickAccessItems: NavItem[] = createdWorkspaces.map((workspace) => ({
-        id: workspace.id,
-        title: workspace.name,
-        href: WorkspaceController.show(workspace),
-        icon: Folder,
-    }));
-
     return (
         <Sidebar collapsible="icon" variant="inset">
             <SidebarHeader>
@@ -62,12 +54,7 @@ export function AppSidebar() {
                     items={mainNavItems}
                 />
 
-                {quickAccessItems.length > 0 && (
-                    <NavMain
-                        title={'Akses Cepat'}
-                        items={quickAccessItems}
-                    />
-                )}
+                <WorkspaceSidebar />
             </SidebarContent>
 
             <SidebarFooter>
