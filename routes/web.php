@@ -12,6 +12,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::group(['prefix' => 'dashboard', 'as' => 'dashboard.'], function () {
         Route::resource('/workspace', \App\Http\Controllers\Dashboard\WorkspaceController::class)->except(['create', 'edit']);
+
+        Route::group(['prefix' => '/workspace/{workspace}', 'as' => 'workspace.'], function () {
+            Route::resource('/project', \App\Http\Controllers\Dashboard\Workspace\ProjectController::class)->except('create', 'edit');
+            Route::patch('/project/{project}/archive', [\App\Http\Controllers\Dashboard\Workspace\ProjectController::class, 'archive'])->name('project.archive');
+        });
     });
 });
 

@@ -1,10 +1,12 @@
 import WorkspaceController from "@/actions/App/Http/Controllers/Dashboard/WorkspaceController";
 import { NavItem } from "@/types";
-import { usePage } from "@inertiajs/react";
-import { CalendarDays, ChevronRightIcon, Cog, FileCheck, Folder, FolderGit, LayoutList, Paperclip, ScrollText, SquareKanban, Users } from "lucide-react";
-import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuAction, SidebarMenuButton, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from "../ui/sidebar";
+import { Link, usePage } from "@inertiajs/react";
+import { CalendarDays, ChevronRightIcon, Cog, FileCheck, Folder, FolderGit, FolderKanban, LayoutList, Paperclip, ScrollText, SquareKanban, Users } from "lucide-react";
+import { SidebarGroup, SidebarGroupLabel, SidebarMenu, SidebarMenuItem, SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem } from "../ui/sidebar";
 import { useCurrentUrl } from "@/hooks/use-current-url";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "../ui/collapsible";
+import ProjectController from "@/actions/App/Http/Controllers/Dashboard/Workspace/ProjectController";
+import { Button } from "../ui/button";
 
 export default function WorkspaceSidebar() {
     const { createdWorkspaces = [] } = usePage().props;
@@ -23,23 +25,24 @@ export default function WorkspaceSidebar() {
 
             <SidebarMenu>
                 {quickAccessItems.map((item) => {
-                    const { isCurrentUrl } = useCurrentUrl();
+                    const isActive = useCurrentUrl().isCurrentOrParentUrl(item.href);
 
                     return (
                         <SidebarMenuItem key={item.id ?? item.title}>
-                            <Collapsible>
+                            <Collapsible defaultOpen={isActive}>
                                 <CollapsibleTrigger asChild>
-                                    <SidebarMenuButton
-                                        className="cursor-pointer group"
-                                        tooltip={{ children: item.title }}
+                                    <Button
+                                        variant="ghost"
+                                        size="sm"
+                                        className="group w-full justify-between transition-none hover:bg-accent hover:text-accent-foreground cursor-pointer"
                                     >
-                                        <Folder />
-                                        <span>{item.title}</span>
+                                        <div className="flex items-center gap-2">
+                                            <Folder strokeWidth={1.5} />
+                                            <span>{item.title}</span>
+                                        </div>
 
-                                        <SidebarMenuAction>
-                                            <ChevronRightIcon className="transition-transform group-data-[state=open]:rotate-90" />
-                                        </SidebarMenuAction>
-                                    </SidebarMenuButton>
+                                        <ChevronRightIcon className="transition-transform group-data-[state=open]:rotate-90" />
+                                    </Button>
                                 </CollapsibleTrigger>
 
                                 <CollapsibleContent>
@@ -74,11 +77,16 @@ export default function WorkspaceSidebar() {
                                                 Ruang Kerja
                                             </SidebarGroupLabel>
 
-                                            <SidebarMenuSubButton>
-                                                <FolderGit strokeWidth={1.5} />
-                                                <span>
-                                                    Proyek
-                                                </span>
+                                            <SidebarMenuSubButton
+                                                asChild
+                                                isActive={isActive}
+                                            >
+                                                <Link href={ProjectController.index({ workspace: item.id! })}>
+                                                    <FolderKanban strokeWidth={1.5} />
+                                                    <span>
+                                                        Proyek
+                                                    </span>
+                                                </Link>
                                             </SidebarMenuSubButton>
 
                                             <SidebarMenuSubButton>
