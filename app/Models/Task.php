@@ -2,39 +2,38 @@
 
 namespace App\Models;
 
+use App\Enums\TaskPriorityEnum;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use OwenIt\Auditing\Contracts\Auditable;
 
-class Workspace extends Model implements Auditable
+class Task extends Model implements Auditable
 {
     use HasUuids, SoftDeletes, \OwenIt\Auditing\Auditable;
 
-    public function owner(): BelongsTo
+    public function workflow(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'owner_id', 'id');
-    }
-
-    public function projects(): HasMany
-    {
-        return $this->hasMany(Project::class);
+        return $this->belongsTo(Workflow::class);
     }
 
     protected $fillable = [
-        'name',
-        'slug',
-        'owner_id',
+        'workflow_id',
+        'position',
+        'title',
         'description',
-        'settings',
+        'priority',
+        'due_date',
+        'estimate_minutes',
+        'completed_at',
     ];
 
     protected function casts(): array
     {
         return [
-            'settings' => 'json',
+            'priority' => TaskPriorityEnum::class,
+            'completed_at' => 'datetime',
         ];
     }
 }

@@ -1,6 +1,6 @@
 import { Workspace } from "@/types";
 import { FolderKanban } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import ProjectController from "@/actions/App/Http/Controllers/Dashboard/Workspace/ProjectController";
 
 export default function KanbanEmptyProject({

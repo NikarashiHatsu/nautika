@@ -12,11 +12,11 @@ import {
     DialogFooter,
     DialogHeader,
     DialogTitle,
-} from '../ui/dialog';
-import { Field, FieldGroup } from '../ui/field';
-import { Input } from '../ui/input';
-import { Button } from '../ui/button';
-import { Spinner } from '../ui/spinner';
+} from '../../ui/dialog';
+import { Field, FieldGroup } from '../../ui/field';
+import { Input } from '../../ui/input';
+import { Button } from '../../ui/button';
+import { Spinner } from '../../ui/spinner';
 
 export default function DeleteWorkflowModal({
     workspace,

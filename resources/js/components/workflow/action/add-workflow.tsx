@@ -1,9 +1,9 @@
 import { cn } from '@/lib/utils';
 import { Circle, Plus, SquareKanban } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { Button } from '../ui/button';
+import { Button } from '@/components/ui/button';
 
-export default function KanbanAddColumn({
+export default function AddWorkflowAction({
     onAdd,
 }: {
     onAdd: (name: string) => void;

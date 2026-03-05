@@ -1,6 +1,5 @@
 import { Project } from "@/types";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
-import { cn } from "@/lib/utils";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../ui/select";
 
 export default function KanbanToolbar({
     projects,

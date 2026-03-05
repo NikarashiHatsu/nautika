@@ -1,7 +1,14 @@
+export type * from './attachable';
 export type * from './auth';
+export type * from './commentable';
 export type * from './navigation';
 export type * from './pagination';
 export type * from './ui';
 export type * from './workspace';
 export type * from './project';
+export type * from './task-checklist';
+export type * from './task-label';
+export type * from './task-priority';
+export type * from './task';
 export type * from './workflow';
+export type * from './workspace';

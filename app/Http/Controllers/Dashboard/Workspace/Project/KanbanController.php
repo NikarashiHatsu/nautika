@@ -9,7 +9,7 @@ use Inertia\Inertia;
 
 class KanbanController extends Controller
 {
-    public function index(Request $request, Workspace $workspace)
+    public function __invoke(Request $request, Workspace $workspace)
     {
         $projects = $workspace->projects()
             ->whereNull('archived_at')

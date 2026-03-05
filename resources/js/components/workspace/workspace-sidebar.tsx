@@ -50,9 +50,9 @@ export default function WorkspaceSidebar() {
 
                                             <SidebarMenuSubButton
                                                 asChild
-                                                isActive={isMenuActive(KanbanController.index({ workspace: item.id! }).url)}
+                                                isActive={isMenuActive(KanbanController.url({ workspace: item.id! }))}
                                             >
-                                                <Link href={KanbanController.index({ workspace: item.id! })}>
+                                                <Link href={KanbanController.url({ workspace: item.id! })}>
                                                     <SquareKanban strokeWidth={1.5} />
                                                     <span>
                                                         Kanban
