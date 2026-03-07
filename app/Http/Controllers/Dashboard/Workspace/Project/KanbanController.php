@@ -23,7 +23,7 @@ class KanbanController extends Controller
             ? $selectedProject->workflows()->orderBy('position')->get()
             : collect();
 
-        return Inertia::render('dashboard/workspace/project/kanban', [
+        return Inertia::render('dashboard/workspace/project/kanban-v2', [
             'workspace' => $workspace,
             'projects' => $projects,
             'selectedProject' => $selectedProject,
